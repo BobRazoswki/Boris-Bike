@@ -22,7 +22,7 @@ describe 'ContainerHolder' do
 		holder.dock(bike)
 		holder.dock(bike2)
 		holder.release(bike2)
-		expect(holder.bikes).to eq ([bike])
+		expect(holder.bikes).to eq([bike])
 	end
 
 	it "know when it is full" do
@@ -44,5 +44,30 @@ describe 'ContainerHolder' do
 		expect(holder.available_bikes).to eq [working]
 	end
 
+	it 'try to release a bike that is not there' do
+		holder.dock(bike)
+		expect{ holder.release(bike2)}.to raise_error(RuntimeError)
+	end
 
+	#it 'should not allow an empty argument' do
+	#	holder.dock(nil)                      
+	#	expect{holder.release(nil)}.to raise_error(ArgumentError)
+	#end
+	
+	#it 'should accept only bikes' do
+	#	holder.dock()
+	#	expect(holder.dock(jjnj)).not_to dock(jjnj)
+	#end
+	
+	it '' do
+		
+	end
+	
+	it '' do
+		
+	end
+
+	it '' do
+		
+	end
 end

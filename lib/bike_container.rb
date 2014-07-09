@@ -1,4 +1,9 @@
 module BikeContainer
+=begin 
+	é? 
+	Anything else that can go wrong? Write tests for it and make them pass. 
+	Do the same for dock() method.
+=end
 DEFAULT_CAPACITY = 20
 	def bikes
 		@bikes ||= []
@@ -22,6 +27,7 @@ DEFAULT_CAPACITY = 20
 	end
 
 	def release(bike)
+		raise "desolé, n'est pas bicyclette ici" unless bikes.include?(bike) 
 		bikes.delete(bike)
 	end	
 
