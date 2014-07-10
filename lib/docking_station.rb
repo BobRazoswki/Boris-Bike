@@ -1,4 +1,5 @@
-require 'bike_container'
+require './lib/bike_container'
+
 class DockingStation
 
 include BikeContainer

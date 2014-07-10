@@ -4,64 +4,91 @@ class ContainerHolder; include BikeContainer; end
 
 describe 'ContainerHolder' do
 
-	let(:holder) {ContainerHolder.new} 
-	let(:bike) {double :bike}
-	let(:bike2) {double :bike}
+	let(:holder)       {ContainerHolder.new       } 
+	let(:bike)         {double :bike, is_a?: Bike, broken?: false }
+	let(:bike2)        {double :bike, is_a?: Bike, broken?: false }
+	let(:working_bike) {double :bike, is_a?: Bike, broken?: false}
+	let(:broken_bike)  {double :bike, is_a?: Bike, broken?: true }
 
 	def fill_station
-		20.times {holder.dock(bike)}
+		ContainerHolder::DEFAULT_CAPACITY.times { holder.dock(bike) }
 	end
 
-	it 'should accept a bike' do
-		expect(holder.bike_count).to eq (0)
-		holder.dock(bike)
-		expect(holder.bike_count).to eq (1)
-	end
+		context 'FILL' do
+			
+				it 'should accept a bike' do
+					expect(holder.bike_count).to eq (0)
+					holder.dock(bike)
+					expect(holder.bike_count).to eq (1)
+				end
 
-	it "should release a bike" do
-		holder.dock(bike)
-		holder.dock(bike2)
-		holder.release(bike2)
-		expect(holder.bikes).to eq([bike])
-	end
+				it 'should not allow an empty argument' do               
+					expect{holder.dock()}.to raise_error(ArgumentError)
+				end
 
-	it "know when it is full" do
-		expect(holder).not_to be_full
-		fill_station
-		expect(holder).to be_full
-	end
+			context 'FULL' do
 
-	it 'should raise an error message' do
-		fill_station
-		expect{holder.dock(bike)}.to raise_error(RuntimeError)
-	end
+			it "Should know when it is full" do
+				expect(holder).not_to be_full
+				fill_station
+				expect(holder).to be_full
+			end
 
-	it 'should know when the bike is available or not' do
-		working = double bike, broken?: false
-		broken = double bike, broken?: true
-		holder.dock(working)
-		holder.dock(broken)
-		expect(holder.available_bikes).to eq [working]
-	end
+			it 'Should raise an error message if the station is full' do
+				fill_station
+				expect{holder.dock(bike)}.to raise_error(RuntimeError)
+			end
 
-	it 'try to release a bike that is not there' do
-		holder.dock(bike)
-		expect{ holder.release(bike2)}.to raise_error(RuntimeError)
-	end
+		end
 
-	#it 'should not allow an empty argument' do
-	#	holder.dock(nil)                      
-	#	expect{holder.release(nil)}.to raise_error(ArgumentError)
-	#end
+
+		end
+
+		context 'RELEASE' do
+
+			it "should release a bike" do
+				holder.dock(working_bike)
+				holder.dock(broken_bike)
+				holder.release(working_bike)
+				expect(holder.bikes).to eq([broken_bike])
+			end
+
+
+			it 'try to release a bike that is not there' do
+				holder.dock(bike)
+				expect{ holder.release(broken_bike) }.to raise_error(RuntimeError)
+			end
+
+
+			it "should not release something that doesn't exist" do               
+				expect{holder.release()}.to raise_error(ArgumentError)
+			end
+
+		end
+
+		
+
+		context 'AVAILABILITY' do
+
+			it 'should know when the bike is available or not' do
+				working = double bike, broken?: false, is_a?: Bike
+				broken = double bike, broken?: true, is_a?: Bike
+				holder.dock(working)
+				holder.dock(broken)
+				expect(holder.available_bikes).to eq [working]
+			end
+
+		end
+
 	
 	#it 'should accept only bikes' do
 	#	holder.dock()
 	#	expect(holder.dock(jjnj)).not_to dock(jjnj)
 	#end
 	
-	it '' do
+	#it '' do
 		
-	end
+	#end
 	
 	it '' do
 		
